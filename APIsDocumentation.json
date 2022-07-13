@@ -1,0 +1,111 @@
+[
+  {
+    "action": "Login",
+    "method": "POST",
+    "path": "/auth/login",
+    "body": ["email", "password"],
+    "response": {
+      "success": {
+        "success": 1,
+        "redirectTo": "/"
+      },
+      "failed": {
+        "success": 0,
+        "errorCode": "an-error-code-from-errorCodes-field",
+        "errorCodes": [
+          "email-invalid",
+          "email-incorrect",
+          "password-incorrect"
+        ]
+      }
+    }
+  },
+  {
+    "action": "Register email",
+    "method": "POST",
+    "path": "/auth/register-email",
+    "body": ["email"],
+    "response": {
+      "success": {
+        "success": 1
+      },
+      "failed": {
+        "success": 0,
+        "errorCode": "an-error-code-from-errorCodes-field",
+        "errorCodes": [
+          "email-invalid",
+          "email-exists"
+        ]
+      }
+    }
+  },
+  {
+    "action": "Register account",
+    "method": "POST",
+    "path": "/auth/register-account",
+    "body": ["email", "name", "password", "repassword", "otpCode", "token"],
+    "response": {
+      "success": {
+        "success": 1,
+        "redirectTo": "/auth/login"
+      },
+      "failed": {
+        "success": 0,
+        "errorCode": "an-error-code-from-errorCodes-field",
+        "errorCodes": [
+          "email-invalid",
+          "email-exists",
+          "repassword-incorrect",
+          "otp-code-incorrect",
+          "otp-code-expired",
+          "token-incorrect",
+          "token-expired"
+        ]
+      }
+    }
+  },
+  {
+    "action": "Forget password: verify email",
+    "method": "POST",
+    "path": "/auth/forget-password/verify-email",
+    "body": ["email"],
+    "response": {
+      "success": {
+        "success": 1
+      },
+      "failed": {
+        "success": 0,
+        "errorCode": "an-error-code-from-errorCodes-field",
+        "errorCodes": [
+          "email-invalid",
+          "email-incorrect"
+        ]
+      }
+    }
+  },
+  {
+    "action": "Reset password",
+    "method": "POST",
+    "path": "/auth/reset-password",
+    "body": ["email", "password", "repassword", "otpCode", "token"],
+    "response": {
+      "success": {
+        "success": 1,
+        "redirectTo": "/auth/login"
+      },
+      "failed": {
+        "success": 0,
+        "errorCode": "an-error-code-from-errorCodes-field",
+        "errorCodes": [
+          "email-invalid",
+          "email-incorrect",
+          "repassword-incorrect",
+          "otp-code-incorrect",
+          "otp-code-expired",
+          "token-incorrect",
+          "token-expired"
+        ]
+      }
+    }
+  }
+]
