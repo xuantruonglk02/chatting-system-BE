@@ -20,6 +20,11 @@ Start app at `http://localhost:3000/`:
 $ npm start
 ```
 
+## Documentations
+
+- [APIs Documentation](/APIsDocumentation.json)
+- [Error Codes](/config/ErrorCodes.js)
+
 ## Tools
 
 - [Postman](https://www.postman.com/downloads/) - Test API
