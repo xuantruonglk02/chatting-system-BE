@@ -6,7 +6,7 @@ const logger = require('morgan');
 const dotenv = require('dotenv').config();
 
 const testRouter = require('./routes/test.router');
-const { NOT_FOUND, UNKNOWN } = require('./config/http-status-codes');
+const { NOT_FOUND, UNKNOWN } = require('./config/HttpStatusCodes');
 
 const app = express();
 
