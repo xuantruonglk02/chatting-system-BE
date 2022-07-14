@@ -2,8 +2,10 @@ const cors = require('cors');
 const createError = require('http-errors');
 const express = require('express');
 const logger = require('morgan');
-
 const dotenv = require('dotenv').config();
+
+// connect to database
+const mongoose = require('./models/database');
 
 const testRouter = require('./routes/test.router');
 const { NOT_FOUND, UNKNOWN } = require('./config/HttpStatusCodes');
@@ -33,5 +35,21 @@ app.use(function(err, req, res, next) {
   res.status(err.status || UNKNOWN);
   res.json({ success: 0 });
 });
+
+// test models
+// const EmailRegistration = require('./models/EmailRegistration');
+// new EmailRegistration({
+//   email: 'xuantruonglk02@gmail.com',
+//   code: 123456,
+//   token: 'token',
+//   expireAt: new Date(new Date().getTime() + (3*60*1000))
+// })
+//   .save()
+//   .then((doc) => {
+//     console.log(doc);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
 
 module.exports = app;
