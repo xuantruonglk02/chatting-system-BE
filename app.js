@@ -7,8 +7,8 @@ const dotenv = require('dotenv').config();
 // connect to database
 const mongoose = require('./models/database');
 
-const testRouter = require('./routes/test.router');
 const { NOT_FOUND, UNKNOWN } = require('./config/HttpStatusCodes');
+const authRouter = require('./routes/auth.router');
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(cors());
 
 // routing
-app.use('/test', testRouter);
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
