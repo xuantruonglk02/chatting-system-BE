@@ -34,15 +34,16 @@
         "errorCode": "an-error-code-from-errorCodes-field",
         "errorCodes": [
           "email-invalid",
-          "email-exists"
+          "email-exists",
+          "email-error"
         ]
       }
     }
   },
   {
-    "action": "Register account",
+    "action": "Create account",
     "method": "POST",
-    "path": "/auth/register-account",
+    "path": "/auth/create-account",
     "body": ["email", "name", "password", "repassword", "otpCode", "token"],
     "response": {
       "success": {
@@ -78,7 +79,8 @@
         "errorCode": "an-error-code-from-errorCodes-field",
         "errorCodes": [
           "email-invalid",
-          "email-incorrect"
+          "email-incorrect",
+          "email-error"
         ]
       }
     }

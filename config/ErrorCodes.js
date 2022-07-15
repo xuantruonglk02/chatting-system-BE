@@ -8,6 +8,9 @@ module.exports = {
   // Đăng nhập, quên mật khẩu...: email không khớp / không tìm thấy
   EMAIL_INCORRECT: 'email-incorrect',
 
+  // Đăng ký, quên mật khẩu: gửi email bị lỗi
+  EMAIL_ERROR: 'email-error',
+
   // Đăng ký: mật khẩu nhập lại không khớp
   REPASSWORD_INCORRECT: 'repassword-incorrect',
 

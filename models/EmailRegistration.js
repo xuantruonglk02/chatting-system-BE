@@ -5,10 +5,12 @@ const emailRegistrationSchema = new Schema({
   email: String,
   code: Number,
   token: String,
-  expireAt: Date
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 600
+  }
 });
-
-emailRegistrationSchema.index({ 'expireAt': 1 }, { expireAfterSeconds: 0 });
 
 const EmailRegistration = mongoose.model('EmailRegistration', emailRegistrationSchema);
 

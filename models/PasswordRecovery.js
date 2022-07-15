@@ -9,10 +9,12 @@ const passwordRecoverySchema = new Schema({
   email: String,
   code: Number,
   token: String,
-  expireAt: Date
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 600
+  }
 });
-
-passwordRecoverySchema.index({ 'expireAt': 1 }, { expireAfterSeconds: 0 });
 
 const PasswordRecovery = mongoose.model('PasswordRecovery', passwordRecoverySchema);
 
