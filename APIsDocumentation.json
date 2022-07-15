@@ -41,6 +41,26 @@
     }
   },
   {
+    "action":"Get Create account page",
+    "method": "GET",
+    "path": "/auth/create-account?token",
+    "query": ["token"],
+    "response": {
+      "success": {
+        "success": 1,
+        "email": "user's-email-address"
+      },
+      "failed": {
+        "success": 0,
+        "errorCode": "an-error-code-from-errorCodes-field",
+        "errorCodes": [
+          "token-expired",
+          "token-incorrect"
+        ]
+      }
+    }
+  },
+  {
     "action": "Create account",
     "method": "POST",
     "path": "/auth/create-account",
@@ -55,6 +75,7 @@
         "errorCode": "an-error-code-from-errorCodes-field",
         "errorCodes": [
           "email-invalid",
+          "email-incorrect",
           "email-exists",
           "repassword-incorrect",
           "otp-code-incorrect",

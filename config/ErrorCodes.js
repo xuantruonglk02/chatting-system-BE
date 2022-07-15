@@ -5,7 +5,7 @@ module.exports = {
   // Đăng ký, đăng nhập: email không hợp lệ / không đúng định dạng
   EMAIL_INVALID: 'email-invalid',
 
-  // Đăng nhập, quên mật khẩu...: email không khớp / không tìm thấy
+  // Đăng nhập, đăng ký, quên mật khẩu...: email không khớp / không tìm thấy
   EMAIL_INCORRECT: 'email-incorrect',
 
   // Đăng ký, quên mật khẩu: gửi email bị lỗi
