@@ -7,6 +7,10 @@
     "response": {
       "success": {
         "success": 1,
+        "email": "user's-email-address",
+        "name": "user's-name",
+        "avatarUrl": "user's-avatar-url",
+        "accessToken": "token",
         "redirectTo": "/"
       },
       "failed": {
@@ -102,6 +106,26 @@
           "email-invalid",
           "email-incorrect",
           "email-error"
+        ]
+      }
+    }
+  },
+  {
+    "action":"Get Reset password page",
+    "method": "GET",
+    "path": "/auth/reset-password?token",
+    "query": ["token"],
+    "response": {
+      "success": {
+        "success": 1,
+        "email": "user's-email-address"
+      },
+      "failed": {
+        "success": 0,
+        "errorCode": "an-error-code-from-errorCodes-field",
+        "errorCodes": [
+          "token-expired",
+          "token-incorrect"
         ]
       }
     }
