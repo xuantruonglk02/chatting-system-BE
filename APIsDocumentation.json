@@ -11,6 +11,7 @@
         "name": "user's-name",
         "avatarUrl": "user's-avatar-url",
         "accessToken": "token",
+        "userId": "user-id",
         "redirectTo": "/"
       },
       "failed": {
@@ -152,6 +153,34 @@
           "token-incorrect",
           "token-expired"
         ]
+      }
+    }
+  },
+  {
+    "action": "Send message",
+    "method": "POST",
+    "path": "/message/send",
+    "body": ["from", "to", "content"],
+    "response": {
+      "success": {
+        "success": 1
+      },
+      "failed": {
+        "success": 0
+      }
+    }
+  },
+  {
+    "action": "",
+    "method": "",
+    "path": "",
+    "body": [],
+    "response": {
+      "success": {
+        "success": 1
+      },
+      "failed": {
+        "success": 0
       }
     }
   }

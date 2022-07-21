@@ -1,7 +1,9 @@
 const cors = require('cors');
 const createError = require('http-errors');
+const ejs = require('ejs');
 const express = require('express');
 const logger = require('morgan');
+const path = require('path');
 const dotenv = require('dotenv').config();
 
 // connect to database
@@ -9,8 +11,12 @@ const mongoose = require('./models/database');
 
 const { NOT_FOUND, UNKNOWN } = require('./config/HttpStatusCodes');
 const authRouter = require('./routes/auth.router');
+const messageRouter = require('./routes/message.router');
 
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -19,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // routing
 app.use('/auth', authRouter);
+app.use('/message', messageRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -35,21 +42,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || UNKNOWN);
   res.json({ success: 0 });
 });
-
-// test models
-// const EmailRegistration = require('./models/EmailRegistration');
-// new EmailRegistration({
-//   email: 'xuantruonglk02@gmail.com',
-//   code: 123456,
-//   token: 'token',
-//   expireAt: new Date(new Date().getTime() + (3*60*1000))
-// })
-//   .save()
-//   .then((doc) => {
-//     console.log(doc);
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
 
 module.exports = app;

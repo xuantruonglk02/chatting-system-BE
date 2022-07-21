@@ -34,6 +34,7 @@ function login(req, res) {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: 24 * 60 * 60 * 1000 });
     return res.json({
       success: 1,
+      userId: user._id,
       email: user.email,
       name: user.name,
       avatarUrl: user.avatarUrl,

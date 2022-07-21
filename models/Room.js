@@ -1,13 +1,13 @@
 const mongoose = require('./database');
 const { Schema } = mongoose;
 
-const conversationSchema = new Schema({
+const roomSchema = new Schema({
   userIds: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
   }]
 });
 
-const Conversation = mongoose.model('Conversation', conversationSchema);
+const Room = mongoose.model('Room', roomSchema);
 
-module.exports = Conversation;
+module.exports = Room;

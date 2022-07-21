@@ -7,11 +7,14 @@ function verifyToken(req, res, next) {
     return res.status(UNAUTHORIZED).json({ success: 0, redirectTo: '/auth/login' });
   }
   
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
+  jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+    if (error) {
+      console.log(error)
       return res.status(UNAUTHORIZED).json({ success: 0, redirect: '/auth/login' });
     }
-
+    if (decoded.exp < new Date().getTime() / 1000) {
+      return res.status(UNAUTHORIZED).json({ success: 0, redirect: '/auth/login' });
+    }
     next();
   });
 }

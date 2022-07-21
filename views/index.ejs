@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+</head>
+<body>
+  <form action="POST">
+    <input id="email" type="text" placeholder="email" required>
+    <input id="password" type="text" placeholder="password" required>
+    <input id="login" type="submit" value="login">
+  </form>
+  <form action="">
+    <input id="from" type="text" placeholder="from" required>
+    <input id="to" type="text" placeholder="to" required>
+    <input id="token" type="text" placeholder="token" required>
+    <input id="message" type="text" required>
+    <input id="send" type="submit" value="send">
+  </form>
+  <script>
+    const BASE_URL = 'http://localhost:3000';
+    const socket = io(BASE_URL);
+
+    let userId = '';
+
+    socket.on('connect', () => {
+      socket.emit('user:connect', {
+        userId: window.location.href.split('/').slice(-1)[0]
+      });
+    });
+    socket.on('server:message', (data) => {
+      console.log(data);
+    });
+
+    $('#login').on('click', function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: '/auth/login',
+        type: 'post',
+        crossDomain: true,
+        data: {
+          email: $('#email').val(),
+          password: $('#password').val()
+        }
+      })
+        .then((response) => {
+          console.log(response);
+        })
+    });
+    
+    $('#send').on('click', function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: '/message/send',
+        type: 'post',
+        data: {
+          from: $('#from').val(),
+          to: $('#to').val(),
+          token: $('#token').val(),
+          content: $('#message').val()
+        }
+      })
+        .then((response) => {
+          console.log(response);
+          $('#token').val(response.accessToken);
+        });
+    });
+  </script>
+</body>
+</html>

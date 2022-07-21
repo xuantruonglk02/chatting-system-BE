@@ -7,6 +7,10 @@
 const app = require('../app');
 const debug = require('debug')('chatting:server');
 const http = require('http');
+const { Server } = require('socket.io');
+
+const initializeSocket = require('../services/socket/socketio');
+const { initializeEmiter } = require('../services/socket/socketEmiter');
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +24,22 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
+
+/**
+ * Create Socket.
+ */
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://127.0.0.1:5500',
+    methods: ['GET', 'POST']
+  }
+});
+
+initializeEmiter(io);
+io.on('connection', (socket) => {
+  initializeSocket(socket);
+});
 
 /**
  * Listen on provided port, on all network interfaces.
