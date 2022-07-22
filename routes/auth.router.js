@@ -2,8 +2,8 @@ const authController = require('../controllers/auth.controller');
 
 const router = require('express').Router();
 
-router.get('/create-account', authController.getCreateAccountPage);
-router.get('/reset-password', authController.getResetPasswordPage);
+router.get('/create-account', authController.checkEmailRegistrationToken);
+router.get('/reset-password', authController.checkPasswordRecoveryToken);
 
 router.post('/login', authController.login);
 router.post('/register-email', authController.registerEmail);

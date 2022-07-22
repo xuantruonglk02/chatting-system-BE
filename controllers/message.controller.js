@@ -6,7 +6,7 @@ const Message = require('../models/Message');
 const { sendMessage } = require('../services/socket/socketEmiter');
 const { BAD_REQUEST, UNKNOWN } = require('../config/HttpStatusCodes');
 
-function clientSendMessage(req, res) {
+const clientSendMessage = async (req, res) => {
   if (!req.body.from || !req.body.to || !req.body.content) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
@@ -14,18 +14,22 @@ function clientSendMessage(req, res) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
 
-  new Message({
-    from: req.body.from,
-    to: req.body.to,
-    content: req.body.content
-  }).save((error, message) => {
-    if (error) {
-      console.log(error);
-      return res.status(UNKNOWN).json({ success: 0 });
-    }
+  try {
+    const message = new Message({
+      from: req.body.from,
+      to: req.body.to,
+      content: req.body.content
+    });
+    await message.save();
+
     sendMessage(req.body);
+
     return res.json({ success: 1 });
-  });
+  
+  } catch (error) {
+    res.status(UNKNOWN).json({ success: 0 });
+    throw error;
+  }
 }
 
 module.exports = {
