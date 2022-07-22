@@ -4,7 +4,7 @@ const validator = require('validator');
 const { randomBytes } = require('node:crypto');
 
 const { BAD_REQUEST, UNKNOWN, UNAUTHORIZED, CONFLICT } = require('../config/HttpStatusCodes');
-const { EMAIL_INVALID, EMAIL_INCORRECT, PASSWORD_INCORRECT, EMAIL_EXISTS, EMAIL_ERROR, TOKEN_INCORRECT, TOKEN_EXPIRED, REPASSWORD_INCORRECT } = require('../config/ErrorCodes');
+const { EMAIL_INVALID, EMAIL_INCORRECT, PASSWORD_INCORRECT, EMAIL_EXISTS, EMAIL_ERROR, TOKEN_INCORRECT, TOKEN_EXPIRED, REPASSWORD_INCORRECT } = require('../config/ErrorMessages');
 const { transporter, verificationEmailOptions, resetPasswordEmailOptions } = require('../services/mailer/nodemailer');
 const User = require('../models/User');
 const EmailRegistration = require('../models/EmailRegistration');
@@ -15,7 +15,7 @@ function login(req, res) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
   if (!validator.isEmail(req.body.email)) {
-    return res.status(BAD_REQUEST).json({ success: 0, errorCode: EMAIL_INVALID });
+    return res.status(BAD_REQUEST).json({ success: 0, errorMessage: EMAIL_INVALID });
   }
 
   User.findOne({ email: req.body.email }, async (error, user) => {
@@ -24,11 +24,11 @@ function login(req, res) {
       return res.status(UNKNOWN).json({ success: 0 });
     }
     if (!user) {
-      return res.status(UNAUTHORIZED).json({ success: 0, errorCode: EMAIL_INCORRECT });
+      return res.status(UNAUTHORIZED).json({ success: 0, errorMessage: EMAIL_INCORRECT });
     }
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) {
-      return res.status(UNAUTHORIZED).json({ success: 0, errorCode: PASSWORD_INCORRECT });
+      return res.status(UNAUTHORIZED).json({ success: 0, errorMessage: PASSWORD_INCORRECT });
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: 24 * 60 * 60 * 1000 });
@@ -49,7 +49,7 @@ function registerEmail(req, res) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
   if (!validator.isEmail(req.body.email)) {
-    return res.status(BAD_REQUEST).json({ success: 0, errorCode: EMAIL_INVALID });
+    return res.status(BAD_REQUEST).json({ success: 0, errorMessage: EMAIL_INVALID });
   }
 
   User.findOne({ email: req.body.email }, (error, user) => {
@@ -58,7 +58,7 @@ function registerEmail(req, res) {
       return res.status(UNKNOWN).json({ success: 0 });
     }
     if (user) {
-      return res.status(CONFLICT).json({ success: 0, errorCode: EMAIL_EXISTS });
+      return res.status(CONFLICT).json({ success: 0, errorMessage: EMAIL_EXISTS });
     }
 
     randomBytes(60, (error, buffer) => {
@@ -82,7 +82,7 @@ function registerEmail(req, res) {
         transporter.sendMail(verificationEmailOptions(doc.email, doc.token), (error, info) => {
           if (error) {
             console.log(error);
-            return res.status(UNKNOWN).json({ success: 0, errorCode: EMAIL_ERROR });
+            return res.status(UNKNOWN).json({ success: 0, errorMessage: EMAIL_ERROR });
           }
 
           return res.json({ success: 1 });
@@ -103,10 +103,10 @@ function getCreateAccountPage(req, res) {
       return res.status(UNKNOWN).json({ success: 0 });
     }
     if (!doc) {
-      return res.status(BAD_REQUEST).json({ success: 0, errorCode: TOKEN_INCORRECT });
+      return res.status(BAD_REQUEST).json({ success: 0, errorMessage: TOKEN_INCORRECT });
     }
     if (new Date().getTime() - doc.createdAt.getTime() > parseInt(process.env.EMAIL_EXPIRATION_TIME)) {
-      return res.status(UNAUTHORIZED).json({ success: 0, errorCode: TOKEN_EXPIRED });
+      return res.status(UNAUTHORIZED).json({ success: 0, errorMessage: TOKEN_EXPIRED });
     }
     
     return res.json({ success: 1, email: doc.email });
@@ -118,10 +118,10 @@ function createAccount(req, res) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
   if (!validator.isEmail(req.body.email)) {
-    return res.status(BAD_REQUEST).json({ success: 0, errorCode: EMAIL_INVALID });
+    return res.status(BAD_REQUEST).json({ success: 0, errorMessage: EMAIL_INVALID });
   }
   if (req.body.password !== req.body.repassword) {
-    return res.status(BAD_REQUEST).json({ success: 0, errorCode: REPASSWORD_INCORRECT });
+    return res.status(BAD_REQUEST).json({ success: 0, errorMessage: REPASSWORD_INCORRECT });
   }
 
   EmailRegistration.findOne({ email: req.body.email, token: req.body.token }, (error, doc) => {
@@ -130,7 +130,7 @@ function createAccount(req, res) {
       return res.status(UNKNOWN).json({ success: 0 });
     }
     if (!doc) {
-      return res.status(BAD_REQUEST).json({ success: 0, errorCode: [EMAIL_INCORRECT, TOKEN_INCORRECT] });
+      return res.status(BAD_REQUEST).json({ success: 0, errorMessage: [EMAIL_INCORRECT, TOKEN_INCORRECT] });
     }
 
     User.findOne({ email: req.body.email }, async (error, user) => {
@@ -139,7 +139,7 @@ function createAccount(req, res) {
         return res.status(UNKNOWN).json({ success: 0 });
       }
       if (user) {
-        return res.status(CONFLICT).json({ success: 0, errorCode: EMAIL_EXISTS });
+        return res.status(CONFLICT).json({ success: 0, errorMessage: EMAIL_EXISTS });
       }
 
       const salt = await bcrypt.genSalt(parseInt(process.env.HASH_ROUND));
@@ -166,7 +166,7 @@ function verifyEmailForPasswordRecovering(req, res) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
   if (!validator.isEmail(req.body.email)) {
-    return res.status(BAD_REQUEST).json({ success: 0, errorCode: EMAIL_INVALID });
+    return res.status(BAD_REQUEST).json({ success: 0, errorMessage: EMAIL_INVALID });
   }
 
   User.findOne({ email: req.body.email }, (error, user) => {
@@ -175,7 +175,7 @@ function verifyEmailForPasswordRecovering(req, res) {
       return res.status(UNKNOWN).json({ success: 0 });
     }
     if (!user) {
-      return res.status(UNAUTHORIZED).json({ success: 0, errorCode: EMAIL_INCORRECT });
+      return res.status(UNAUTHORIZED).json({ success: 0, errorMessage: EMAIL_INCORRECT });
     }
 
     randomBytes(60, (error, buffer) => {
@@ -200,7 +200,7 @@ function verifyEmailForPasswordRecovering(req, res) {
         transporter.sendMail(resetPasswordEmailOptions(doc.email, doc.token), (error, info) => {
           if (error) {
             console.log(error);
-            return res.status(UNKNOWN).json({ success: 0, errorCode: EMAIL_ERROR });
+            return res.status(UNKNOWN).json({ success: 0, errorMessage: EMAIL_ERROR });
           }
 
           return res.json({ success: 1 });
@@ -221,10 +221,10 @@ function getResetPasswordPage(req, res) {
       return res.status(UNKNOWN).json({ success: 0 });
     }
     if (!doc) {
-      return res.status(BAD_REQUEST).json({ success: 0, errorCode: TOKEN_INCORRECT });
+      return res.status(BAD_REQUEST).json({ success: 0, errorMessage: TOKEN_INCORRECT });
     }
     if (new Date().getTime() - doc.createdAt.getTime() > parseInt(process.env.PASSWORD_EXPIRATION_TIME)) {
-      return res.status(UNAUTHORIZED).json({ success: 0, errorCode: TOKEN_EXPIRED });
+      return res.status(UNAUTHORIZED).json({ success: 0, errorMessage: TOKEN_EXPIRED });
     }
     
     return res.json({ success: 1, email: doc.email });
@@ -236,10 +236,10 @@ function resetPassword(req, res) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
   if (!validator.isEmail(req.body.email)) {
-    return res.status(BAD_REQUEST).json({ success: 0, errorCode: EMAIL_INVALID });
+    return res.status(BAD_REQUEST).json({ success: 0, errorMessage: EMAIL_INVALID });
   }
   if (req.body.password !== req.body.repassword) {
-    return res.status(BAD_REQUEST).json({ success: 0, errorCode: REPASSWORD_INCORRECT });
+    return res.status(BAD_REQUEST).json({ success: 0, errorMessage: REPASSWORD_INCORRECT });
   }
 
   PasswordRecovery.findOne({ email: req.body.email, token: req.body.token }, (error, doc) => {
@@ -248,7 +248,7 @@ function resetPassword(req, res) {
       return res.status(UNKNOWN).json({ success: 0 });
     }
     if (!doc) {
-      return res.status(BAD_REQUEST).json({ success: 0, errorCode: [EMAIL_INCORRECT, TOKEN_INCORRECT] });
+      return res.status(BAD_REQUEST).json({ success: 0, errorMessage: [EMAIL_INCORRECT, TOKEN_INCORRECT] });
     }
 
     User.findById(doc.userId, async (error, user) => {
