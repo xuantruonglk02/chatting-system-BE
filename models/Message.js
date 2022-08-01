@@ -8,7 +8,7 @@ const messageSchema = new Schema({
   },
   to: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'Conversation'
   },
   content: String,
   attach: {

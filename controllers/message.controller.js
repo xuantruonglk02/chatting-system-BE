@@ -14,8 +14,12 @@ const getMessages = async (req, res) => {
   }
 
   try {
-    const userId = userController.getUserId(req);
-    const messages = await Message.find({ from: userId, to: req.query.to })
+    const messages = await Message.find({ to: req.query.to })
+      .select('_id from to content attach createdAt')
+      .populate({
+        path: 'from',
+        select: '_id name avataUrl'
+      })
       .sort({ createdAt: -1 })
       .skip(req.query.begin)
       .limit(req.query.limit);

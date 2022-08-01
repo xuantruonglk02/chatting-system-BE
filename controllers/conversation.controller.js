@@ -11,7 +11,7 @@ const checkConversationId = async (id) => {
   }
 
   try {
-    const conversation = await Conversation.findById(id);
+    const conversation = await Conversation.findById(id).select('_id');
     if (conversation) {
       return true;
     }
