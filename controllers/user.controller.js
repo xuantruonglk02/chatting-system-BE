@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { isValidObjectId } = require('mongoose');
 
+const { BAD_REQUEST, UNKNOWN } = require('../config/HttpStatusCodes');
 const User = require('../models/User');
 const { Conversation } = require('../models/Conversation');
 
@@ -70,10 +71,33 @@ const getSocketIds = async (userIds) => {
   }
 }
 
+const getUserOnlineStatuses = async (req, res) => {
+  if (!req.body.userIds || !Array.isArray(req.body.userIds)
+    || isNaN(req.body.begin) || isNaN(req.body.limit)) {
+    return res.status(BAD_REQUEST).json({ success: 0 });
+  }
+
+  try {
+    const users = await User.find({
+      _id: { $in: req.body.userIds }
+    })
+      .select('_id lastOnline')
+      .skip(req.body.begin)
+      .limit(req.body.limit);
+
+    return res.json({ success: 1, users: users });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(UNKNOWN).json({ success: 0 });
+  }
+}
+
 module.exports = {
   getUserId,
   userOnline,
   getConversationIdsOfUser,
   userOffline,
-  getSocketIds
+  getSocketIds,
+  getUserOnlineStatuses
 }

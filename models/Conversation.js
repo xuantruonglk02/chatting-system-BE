@@ -7,6 +7,7 @@ const ConversationType = {
 }
 
 const conversationSchema = new Schema({
+  title: String,
   type: {
     type: String,
     default: ConversationType.PTP

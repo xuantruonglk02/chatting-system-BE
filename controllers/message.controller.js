@@ -3,12 +3,12 @@ const { isValidObjectId } = require('mongoose');
 const { BAD_REQUEST, UNKNOWN } = require('../config/HttpStatusCodes');
 const { sendMessage } = require('../services/socket/socketEmiter');
 const Message = require('../models/Message');
+const { ConversationType } = require('../models/Conversation');
 const userController = require('./user.controller');
 const conversationController = require('./conversation.controller');
 
 const getMessages = async (req, res) => {
-  if (!req.query.to || !req.query.begin || !req.query.limit
-    || !isValidObjectId(req.query.to)
+  if (!req.query.to || !isValidObjectId(req.query.to)
     || isNaN(req.query.begin) || isNaN(req.query.limit)) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
@@ -39,7 +39,11 @@ const clientSendMessage = async (req, res) => {
     const isConversationId = await conversationController.checkConversationId(req.body.to);
     const conversationId = isConversationId
       ? req.body.to
-      : await conversationController.createConversation([userId, req.body.to]);
+      : await conversationController.createConversation({
+        userIds: [userId, req.body.to],
+        type: ConversationType.PTP,
+        title: ''
+      });
 
     const message = await new Message({
       from: userId,
