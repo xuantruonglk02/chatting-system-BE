@@ -4,7 +4,7 @@ const { BAD_REQUEST, UNKNOWN } = require('../config/HttpStatusCodes');
 const { sendMessage } = require('../services/socket/socketEmiter');
 const Message = require('../models/Message');
 const userController = require('./user.controller');
-const roomController = require('./room.controller');
+const conversationController = require('./conversation.controller');
 
 const getMessages = async (req, res) => {
   if (!req.query.to || !req.query.begin || !req.query.limit
@@ -36,10 +36,10 @@ const clientSendMessage = async (req, res) => {
 
   try {
     const userId = userController.getUserId(req);
-    const isConversationId = await roomController.checkConversationId(req.body.to);
+    const isConversationId = await conversationController.checkConversationId(req.body.to);
     const conversationId = isConversationId
       ? req.body.to
-      : await roomController.createConversation([userId, req.body.to]);
+      : await conversationController.createConversation([userId, req.body.to]);
 
     const message = await new Message({
       from: userId,
@@ -53,7 +53,7 @@ const clientSendMessage = async (req, res) => {
       content: message.content
     });
 
-    await roomController.setLastMessage(conversationId, message._id);
+    await conversationController.setLastMessage(conversationId, message._id);
 
     return res.json({ success: 1 });
   

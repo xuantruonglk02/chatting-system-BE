@@ -1,5 +1,6 @@
 const { isValidObjectId } = require('mongoose');
 
+const { UNKNOWN, BAD_REQUEST } = require('../config/HttpStatusCodes');
 const { addSocketsToRoom } = require('../services/socket/socketio');
 const { Conversation, ConversationType } = require('../models/Conversation');
 const userController = require('./user.controller');
@@ -50,6 +51,26 @@ const createConversation = async (userIds, type = ConversationType.PTP) => {
   }
 }
 
+const clientCreateConversation = async (req, res) => {
+  if (!req.body.userIds || !Array.isArray(req.body.userIds)
+    || req.body.userIds.length < 3 || req.body.userIds.length > 50) {
+    return res.status(BAD_REQUEST).json({ success: 0 });
+  }
+
+  try {
+    const conversationId = await createConversation(req.body.userIds, ConversationType.PTG);
+    if (!conversationId) {
+      return res.status(BAD_REQUEST).json({ success: 0 });
+    }
+    
+    return res.json({ success: 1, conversationId: conversationId });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(UNKNOWN).json({ success: 0 });
+  }
+}
+
 const getConversationIdsOfUser = async (userId) => {
   if (!isValidObjectId(userId)) {
     return;
@@ -81,6 +102,7 @@ const setLastMessage = async (conversationId, messageId) => {
 module.exports = {
   checkConversationId,
   createConversation,
+  clientCreateConversation,
   getConversationIdsOfUser,
   setLastMessage
 }

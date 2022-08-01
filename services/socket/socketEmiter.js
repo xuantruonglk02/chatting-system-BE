@@ -6,7 +6,6 @@ function initializeEmiter(_io) {
 
 function sendMessage(roomId, data) {
   io.to(roomId).emit('server:message', data);
-  console.log(roomId);
 }
 
 module.exports = {

@@ -13,6 +13,7 @@ const { NOT_FOUND, UNKNOWN } = require('./config/HttpStatusCodes');
 const authRouter = require('./routes/auth.router');
 const messageRouter = require('./routes/message.router');
 const userRouter = require('./routes/user.router');
+const conversationRouter = require('./routes/conversation.router');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(cors());
 app.use('/auth', authRouter);
 app.use('/message', messageRouter);
 app.use('/user', userRouter);
+app.use('/conversation', conversationRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
