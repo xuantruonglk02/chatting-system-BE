@@ -7,7 +7,10 @@ router.get('/test/:id', (req, res) => {
   res.render('index');
 });
 
-// router.post('/send', authMiddleware.verifyToken, messageController.clientSendMessage);
+// router.use(authMiddleware.verifyToken);
+
+router.get('/get', messageController.getMessages);
+
 router.post('/send', messageController.clientSendMessage);
 
 module.exports = router;

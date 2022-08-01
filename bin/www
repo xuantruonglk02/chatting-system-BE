@@ -9,7 +9,7 @@ const debug = require('debug')('chatting:server');
 const http = require('http');
 const { Server } = require('socket.io');
 
-const initializeSocket = require('../services/socket/socketio');
+const { initializeSocket } = require('../services/socket/socketio');
 const { initializeEmiter } = require('../services/socket/socketEmiter');
 
 /**

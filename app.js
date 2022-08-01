@@ -12,6 +12,7 @@ const mongoose = require('./models/database');
 const { NOT_FOUND, UNKNOWN } = require('./config/HttpStatusCodes');
 const authRouter = require('./routes/auth.router');
 const messageRouter = require('./routes/message.router');
+const userRouter = require('./routes/user.router');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(cors());
 // routing
 app.use('/auth', authRouter);
 app.use('/message', messageRouter);
+app.use('/user', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

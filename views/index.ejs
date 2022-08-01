@@ -13,6 +13,8 @@
     <input id="from" type="text" placeholder="from" required>
     <input id="to" type="text" placeholder="to" required>
     <br>
+    <input id="token" type="text" placeholder="token" required>
+    <br>
     <input id="message" type="text" required>
     <input id="send" type="submit" value="send">
   </form>
@@ -36,6 +38,7 @@
       $.ajax({
         url: '/message/send',
         type: 'post',
+        beforeSend: function(xhr){xhr.setRequestHeader('x-access-token', $('#token').val())},
         data: {
           from: $('#from').val(),
           to: $('#to').val(),

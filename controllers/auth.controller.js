@@ -42,7 +42,7 @@ const login = async (req, res) => {
   
   } catch (error) {
     res.status(UNKNOWN).json({ success: 0 })
-    throw error;
+    return console.log(error);
   }
 }
 
@@ -74,7 +74,7 @@ const registerEmail = async (req, res) => {
   
   } catch (error) {
     res.status(UNKNOWN).json({ success: 0 });
-    throw error;
+    return console.log(error);
   }
 }
 
@@ -96,7 +96,7 @@ const checkEmailRegistrationToken = async (req, res) => {
   
   } catch (error) {
     res.status(UNKNOWN).json({ success: 0 });
-    throw error;
+    return console.log(error);
   }
 }
 
@@ -137,7 +137,7 @@ const createAccount = async (req, res) => {
   
   } catch (error) {
     res.status(UNKNOWN).json({ success: 0 });
-    throw error;
+    return console.log(error);
   }
 }
 
@@ -170,7 +170,7 @@ const verifyEmailForPasswordRecovering = async (req, res) => {
   
   } catch (error) {
     res.status(UNKNOWN).json({ success: 0 });
-    throw error;
+    return console.log(error);
   }
 }
 
@@ -192,7 +192,7 @@ const checkPasswordRecoveryToken = async (req, res) => {
   
   } catch (error) {
     res.status(UNKNOWN).json({ success: 0 });
-    throw error;
+    return console.log(error);
   }
 }
 
@@ -229,7 +229,7 @@ const resetPassword = async (req, res) => {
   
   } catch (error) {
     res.status(UNKNOWN).json({ success: 0 });
-    throw error;
+    return console.log(error);
   }
 }
 
