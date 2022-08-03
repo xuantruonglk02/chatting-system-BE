@@ -12,6 +12,7 @@ const conversationSchema = new Schema({
     type: String,
     default: ConversationType.PTP
   },
+  avatarUrl: String,
   userIds: [{
     type: Schema.Types.ObjectId,
     ref: 'User'

@@ -55,11 +55,7 @@ const clientSendMessage = async (req, res) => {
       content: req.body.content
     }).save();
 
-    sendMessage(conversationId.toString(), {
-      from: userId,
-      to: conversationId,
-      content: message.content
-    });
+    sendMessage(conversationId.toString(), message);
 
     await conversationController.setLastMessage(conversationId, message._id);
 
