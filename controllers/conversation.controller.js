@@ -110,11 +110,15 @@ const getRecentConversations = async (req, res) => {
     const userId = userController.getUserId(req);
     const conversations = await Conversation.find({ userIds: userId })
       .populate({
+        path: 'userIds',
+        select: '_id name avatarUrl'
+      })
+      .populate({
         path: 'lastMessage',
         select: '_id from content attach createdAt',
         populate: {
           path: 'from',
-          select: '_id name avatarUrl'
+          select: '_id'
         }
       })
       .sort({ lastActionTime: -1 })

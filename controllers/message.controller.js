@@ -8,13 +8,13 @@ const userController = require('./user.controller');
 const conversationController = require('./conversation.controller');
 
 const getMessages = async (req, res) => {
-  if (!req.query.to || !isValidObjectId(req.query.to)
+  if (!req.query.conversationId || !isValidObjectId(req.query.conversationId)
     || isNaN(req.query.begin) || isNaN(req.query.limit)) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
 
   try {
-    const messages = await Message.find({ to: req.query.to })
+    const messages = await Message.find({ to: req.query.conversationId })
       .select('_id from to content attach createdAt')
       .populate({
         path: 'from',
