@@ -83,11 +83,18 @@ const getUserOnlineStatuses = async (req, res) => {
     const users = await User.find({
       _id: { $in: req.body.userIds }
     })
-      .select('_id lastOnline')
+      .select('_id socketId lastOnline')
       .skip(req.body.begin)
       .limit(req.body.limit);
 
-    return res.json({ success: 1, users: users });
+    const returnUsers = users.map((user) => {
+      return {
+        _id: user._id,
+        status: user.socketId ? 'online' : 'offline',
+        lastOnline: user.lastOnline
+      }
+    });
+    return res.json({ success: 1, users: returnUsers });
 
   } catch (error) {
     console.log(error);
@@ -171,6 +178,31 @@ const changeUserAvatar = async (req, res) => {
   }
 }
 
+const searchUserByKeyword = async (req, res) => {
+  if (!req.query.keyword) {
+    return res.status(BAD_REQUEST).json({ success: 0 });
+  }
+
+  try {
+    const users = await User
+      .find({
+        $or: [
+          { name: new RegExp(req.query.keyword, 'i') },
+          { email: req.query.keyword }
+        ]
+      })
+      .select('_id name avatarUrl lastOnline');
+
+    return res.json({ success: 1, users: users });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(UNKNOWN).json({ success: 0 });
+  }
+}
+
+
+
 module.exports = {
   getUserId,
   userOnline,
@@ -180,5 +212,6 @@ module.exports = {
   getUserOnlineStatuses,
   changeUserName,
   changeUserPassword,
-  changeUserAvatar
+  changeUserAvatar,
+  searchUserByKeyword
 }
