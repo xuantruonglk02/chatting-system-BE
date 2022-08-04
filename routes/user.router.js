@@ -5,11 +5,9 @@ const router = require('express').Router();
 
 router.use(authMiddleware.verifyToken);
 
-router.post('/online-status', userController.getUserOnlineStatuses);
-router.post('/:userId', async (req, res) => {
-  const ids = await userController.getSocketIds([req.params.userId]);
-  console.log(ids);
-  return res.json({ data: ids});
-});
+router.get('/online-status', userController.getUserOnlineStatuses);
+router.post('/profile/change/name', userController.changeUserName);
+router.post('/profile/change/password', userController.changeUserPassword);
+router.post('/profile/change/avatar', userController.changeUserAvatar);
 
 module.exports = router;

@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const { isValidObjectId } = require('mongoose');
 
-const { BAD_REQUEST, UNKNOWN } = require('../config/HttpStatusCodes');
+const { BAD_REQUEST, UNKNOWN, UNAUTHORIZED } = require('../config/HttpStatusCodes');
+const { PASSWORD_INCORRECT, REPASSWORD_INCORRECT } = require('../config/ErrorMessages');
 const User = require('../models/User');
 const { Conversation } = require('../models/Conversation');
 
@@ -93,11 +95,90 @@ const getUserOnlineStatuses = async (req, res) => {
   }
 }
 
+const changeUserName = async (req, res) => {
+  if (!req.body.newName || !req.body.password) {
+    return res.status(BAD_REQUEST).json({ success: 0 });
+  }
+
+  try {
+    const userId = getUserId(req);
+    const user = await User.findById(userId);
+
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) {
+      return res.status(UNAUTHORIZED).json({ success: 0, errorMessage: PASSWORD_INCORRECT });
+    }
+
+    user.name = req.body.newName;
+    await user.save();
+
+    return res.json({ success: 1 });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(UNKNOWN).json({ success: 0 });
+  }
+}
+
+const changeUserPassword = async (req, res) => {
+  if (!req.body.newPassword || !req.body.reNewPassword || !req.body.password) {
+    return res.status(BAD_REQUEST).json({ success: 0 });
+  }
+  if (req.body.newPassword !== req.body.reNewPassword) {
+    return res.status(BAD_REQUEST).json({ success: 0, errorMessage: REPASSWORD_INCORRECT });
+  }
+
+  try {
+    const userId = getUserId(req);
+    const user = await User.findById(userId);
+
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) {
+      return res.status(UNAUTHORIZED).json({ success: 0, errorMessage: PASSWORD_INCORRECT });
+    }
+
+    const salt = await bcrypt.genSalt(parseInt(process.env.HASH_ROUND));
+    const hash = await bcrypt.hash(req.body.newPassword, salt);
+
+    user.password = hash;
+    await user.save();
+
+    return res.json({ success: 1 });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(UNKNOWN).json({ success: 0 });
+  }
+}
+
+const changeUserAvatar = async (req, res) => {
+  if (!req.body.newAvatarUrl) {
+    return res.status(BAD_REQUEST).json({ success: 0 });
+  }
+
+  try {
+    const userId = getUserId(req);
+    const user = await User.findById(userId);
+
+    user.avatarUrl = req.body.newAvatarUrl;
+    await user.save();
+
+    return res.json({ success: 1 });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(UNKNOWN).json({ success: 0 });
+  }
+}
+
 module.exports = {
   getUserId,
   userOnline,
   getConversationIdsOfUser,
   userOffline,
   getSocketIds,
-  getUserOnlineStatuses
+  getUserOnlineStatuses,
+  changeUserName,
+  changeUserPassword,
+  changeUserAvatar
 }
