@@ -191,9 +191,19 @@ const searchUserByKeyword = async (req, res) => {
           { email: req.query.keyword }
         ]
       })
-      .select('_id name avatarUrl lastOnline');
+      .select('_id name avatarUrl socketId lastOnline');
 
-    return res.json({ success: 1, users: users });
+    const returnUsers = users.map((user) => {
+      return {
+        _id: user._id,
+        name: user.name,
+        avatarUrl: user.avatarUrl,
+        status: user.socketId ? 'online' : 'offline',
+        lastOnline: user.lastOnline
+      }
+    });
+
+    return res.json({ success: 1, users: returnUsers });
 
   } catch (error) {
     console.log(error);
