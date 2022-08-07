@@ -3,11 +3,11 @@ const messageController = require('../controllers/message.controller');
 
 const router = require('express').Router();
 
+router.use(authMiddleware.verifyToken);
+
 router.get('/test/:id', (req, res) => {
   res.render('index');
 });
-
-// router.use(authMiddleware.verifyToken);
 
 router.get('/get', messageController.getMessages);
 
