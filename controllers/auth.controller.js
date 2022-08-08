@@ -127,7 +127,8 @@ const createAccount = async (req, res) => {
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
-      password: hash
+      password: hash,
+      avatarUrl: 'avatar1.png'
     });
     await newUser.save();
 

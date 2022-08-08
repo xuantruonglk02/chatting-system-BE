@@ -49,7 +49,7 @@ const clientSendMessage = async (req, res) => {
         title: ''
       });
 
-    const attachments = req.files.length === 0
+    const attachments = req.files?.length === 0
       ? null
       : {
           type: req.files[0].mimetype.split('/')[0],
