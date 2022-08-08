@@ -211,7 +211,16 @@ const searchUserByKeyword = async (req, res) => {
   }
 }
 
+const getOnlineUsers = async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    
 
+  } catch (error) {
+    console.log(error);
+    return res.status(UNKNOWN).json({ success: 0 });
+  }
+}
 
 module.exports = {
   getUserId,
@@ -223,5 +232,6 @@ module.exports = {
   changeUserName,
   changeUserPassword,
   changeUserAvatar,
-  searchUserByKeyword
+  searchUserByKeyword,
+  getOnlineUsers
 }

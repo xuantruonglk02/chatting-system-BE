@@ -11,9 +11,11 @@ const messageSchema = new Schema({
     ref: 'Conversation'
   },
   content: String,
-  attach: {
+  attachments: {
     type: { type: String },
-    url: String
+    urls: [
+      { type: String }
+    ]
   },
   createdAt: {
     type: Date,

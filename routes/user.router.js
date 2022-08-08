@@ -7,6 +7,7 @@ router.use(authMiddleware.verifyToken);
 
 router.get('/online-status', userController.getUserOnlineStatuses);
 router.get('/search', userController.searchUserByKeyword);
+router.get('/online', userController.getOnlineUsers);
 router.post('/profile/change/name', userController.changeUserName);
 router.post('/profile/change/password', userController.changeUserPassword);
 router.post('/profile/change/avatar', userController.changeUserAvatar);

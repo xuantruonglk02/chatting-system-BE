@@ -15,6 +15,8 @@ const messageRouter = require('./routes/message.router');
 const userRouter = require('./routes/user.router');
 const conversationRouter = require('./routes/conversation.router');
 
+const testRouter = require('./routes/test.router');
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -24,12 +26,15 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // routing
 app.use('/auth', authRouter);
 app.use('/message', messageRouter);
 app.use('/user', userRouter);
 app.use('/conversation', conversationRouter);
+
+app.use('/test', testRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

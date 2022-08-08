@@ -1,5 +1,6 @@
-const authMiddleware = require('../middlewares/auth.middleware');
 const messageController = require('../controllers/message.controller');
+const authMiddleware = require('../middlewares/auth.middleware');
+const upload = require('../middlewares/multer.middleware');
 
 const router = require('express').Router();
 
@@ -11,6 +12,6 @@ router.get('/test/:id', (req, res) => {
 
 router.get('/get', messageController.getMessages);
 
-router.post('/send', messageController.clientSendMessage);
+router.post('/send', upload.array('attachment', 9), messageController.clientSendMessage);
 
 module.exports = router;

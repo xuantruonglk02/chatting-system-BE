@@ -49,17 +49,29 @@ const clientSendMessage = async (req, res) => {
         title: ''
       });
 
+    const attachments = req.files.length === 0
+      ? null
+      : {
+          type: req.files[0].mimetype.split('/')[0],
+          urls: req.files.map((attachment) => {
+            return attachment.path.replace(/\\/g, '/').replace('public/', '/');
+          })
+        };
     const message = await new Message({
       from: userId,
       to: conversationId,
-      content: req.body.content
+      content: req.body.content,
+      attachments: attachments
     }).save();
 
     sendMessage(conversationId.toString(), message);
 
     await conversationController.setLastMessage(conversationId, message._id);
 
-    return res.json({ success: 1 });
+    return res.json({
+      success: 1,
+      message: message
+    });
   
   } catch (error) {
     res.status(UNKNOWN).json({ success: 0 });

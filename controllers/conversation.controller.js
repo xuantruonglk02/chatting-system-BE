@@ -49,7 +49,7 @@ const createConversation = async (data) => {
 }
 
 const clientCreateConversation = async (req, res) => {
-  if (!req.body.title
+  if (!req.body.title || !req.body.avatarUrl
     || !req.body.userIds || !Array.isArray(req.body.userIds)
     || req.body.userIds.length < 3 || req.body.userIds.length > 50) {
     return res.status(BAD_REQUEST).json({ success: 0 });
@@ -58,6 +58,7 @@ const clientCreateConversation = async (req, res) => {
   try {
     const conversationId = await createConversation({
       title: req.body.title,
+      avatarUrl: req.body.avatarUrl,
       type: ConversationType.PTG,
       userIds: req.body.userIds
     });
