@@ -49,10 +49,10 @@ const clientSendMessage = async (req, res) => {
         title: ''
       });
 
-    const attachments = req.files?.length === 0
+    const attachments = !req.files
       ? null
       : {
-          type: req.files[0].mimetype.split('/')[0],
+          type: req.files[0]?.mimetype.split('/')[0],
           urls: req.files.map((attachment) => {
             return attachment.path.replace(/\\/g, '/').replace('public/', '/');
           })
