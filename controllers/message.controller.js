@@ -18,7 +18,7 @@ const getMessages = async (req, res) => {
       .select('_id from to content attach createdAt')
       .populate({
         path: 'from',
-        select: '_id name avataUrl'
+        select: '_id name avatarUrl'
       })
       .sort({ createdAt: -1 })
       .skip(req.query.begin)
@@ -57,8 +57,10 @@ const clientSendMessage = async (req, res) => {
             return attachment.path.replace(/\\/g, '/').replace('public/', '/');
           })
         };
+
+    const userFrom = await userController.getUserProfile(userId, ['_id', 'name', 'avatarUrl']);
     const message = await new Message({
-      from: userId,
+      from: userFrom,
       to: conversationId,
       content: req.body.content,
       attachments: attachments

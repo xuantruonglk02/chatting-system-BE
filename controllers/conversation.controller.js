@@ -112,7 +112,7 @@ const getRecentConversations = async (req, res) => {
     const conversations = await Conversation.find({ userIds: userId })
       .populate({
         path: 'userIds',
-        select: '_id name avatarUrl'
+        select: '_id name avatarUrl socketId lastOnline'
       })
       .populate({
         path: 'lastMessage',
@@ -125,6 +125,26 @@ const getRecentConversations = async (req, res) => {
       .sort({ lastActionTime: -1 })
       .skip(req.query.begin)
       .limit(req.query.limit);
+
+    conversations.forEach((conversation) => {
+      if (conversation.type === ConversationType.PTP) {
+        const userIndex = conversation.userIds.findIndex(user => user._id.toString() !== userId);
+        conversation.avatarUrl = conversation.userIds[userIndex].avatarUrl;
+      }
+    });
+
+    conversations.forEach((conversation) => {
+      // conversation.userIds = conversation.userIds.map((user) => {
+      //   return {
+      //     _id: user._id,
+      //     name: user.name,
+      //     avatarUrl: user.avatarUrl,
+      //     status: user.socketId ? 'online' : 'offline',
+      //     lastOnline: user.lastOnline
+      //   }
+      // });
+      conversation.a = 'a';
+    });
 
     res.json({ success: 1, conversations: conversations });
 

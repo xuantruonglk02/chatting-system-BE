@@ -18,6 +18,16 @@ const getUserId = (req) => {
   }
 }
 
+const getUserProfile = async (userId, args) => {
+  try {
+    const user = await User.findById(userId).select(args.join(' '));
+    return user;
+
+  } catch (error) {
+    throw error;
+  }
+}
+
 const userOnline = async (userId, socketId) => {
   try {
     const user = await User.findById(userId);
@@ -224,6 +234,7 @@ const getOnlineUsers = async (req, res) => {
 
 module.exports = {
   getUserId,
+  getUserProfile,
   userOnline,
   getConversationIdsOfUser,
   userOffline,
