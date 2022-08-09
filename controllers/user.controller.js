@@ -224,7 +224,31 @@ const searchUserByKeyword = async (req, res) => {
 const getOnlineUsers = async (req, res) => {
   try {
     const userId = getUserId(req);
-    
+    const conversations = await Conversation
+      .find({userIds: userId})
+      .select('-_id userIds')
+      .populate({
+        path: 'userIds',
+        match: {
+          socketId: {
+            $exists: true
+          },
+          $and: [
+            { _id: { $ne: userId }},
+            { socketId: { $ne: '' }}
+          ]
+        },
+        select: '_id name avatarUrl'
+      });
+
+    const users = conversations.reduce((list, conversation) => {
+      const usersNotInList = conversation.userIds.filter((user) => {
+        return list.findIndex(userInList => userInList._id.toString() === user._id.toString()) === -1;
+      });
+      return list.concat(usersNotInList);
+    }, []);
+
+    return res.json({ success: 1, users: users });
 
   } catch (error) {
     console.log(error);
