@@ -155,20 +155,28 @@ const getRecentConversations = async (req, res) => {
       }
     });
 
-    conversations.forEach((conversation) => {
-      // conversation.userIds = conversation.userIds.map((user) => {
-      //   return {
-      //     _id: user._id,
-      //     name: user.name,
-      //     avatarUrl: user.avatarUrl,
-      //     status: user.socketId ? 'online' : 'offline',
-      //     lastOnline: user.lastOnline
-      //   }
-      // });
-      conversation.a = 'a';
+    const result = conversations.map((conversation) => {
+      const users = conversation.userIds.map((user) => {
+        return {
+          _id: user._id,
+          name: user.name,
+          avatarUrl: user.avatarUrl,
+          status: user.socketId ? 'online' : 'offline',
+          lastOnline: user.lastOnline
+        }
+      });
+      return {
+        _id: conversation._id,
+        title: conversation.title,
+        type: conversation.type,
+        avatarUrl: conversation.avatarUrl,
+        userIds: users,
+        lastActionTime: conversation.lastActionTime,
+        lastMessage: conversation.lastMessage
+      }
     });
 
-    res.json({ success: 1, conversations: conversations });
+    res.json({ success: 1, conversations: result });
 
   } catch (error) {
     console.log(error);
