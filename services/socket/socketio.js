@@ -31,10 +31,11 @@ const removeSocket = (socket) => {
 }
 
 const addSocketsToRoom = (roomId, socketIds) => {
+  const _roomId = roomId.toString();
   socketIds.forEach(socketId => {
     const index = sockets.findIndex(_socket => _socket.id === socketId);
     if (index === -1) return;
-    sockets[index].socket.join(roomId);
+    sockets[index].socket.join(_roomId);
   });
 }
 
@@ -42,7 +43,7 @@ const applyRoomsToSocket = (socketId, roomIds) => {
   const index = sockets.findIndex(_socket => _socket.id === socketId);
   roomIds.forEach(roomId => {
     if (index !== -1)
-      sockets[index].socket.join(roomId);
+      sockets[index].socket.join(roomId.toString());
   });
 }
 

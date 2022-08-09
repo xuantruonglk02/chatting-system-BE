@@ -22,6 +22,28 @@ const checkConversationId = async (id) => {
   }
 }
 
+const getCoversationPTP = async (req, res) => {
+  if (!req.query.targetUserId) {
+    return res.status(BAD_REQUEST).json({ success: 0 });
+  }
+
+  try {
+    const userId = userController.getUserId(req);
+    const conversation = await Conversation.findOne({
+      type: ConversationType.PTP,
+      userIds: {
+        $all: [userId, req.query.targetUserId]
+      }
+    });
+
+    return res.json({ success: 1, conversation: conversation });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(UNKNOWN).json({ success: 0 });
+  }
+}
+
 const createConversation = async (data) => {
   if ((data.type !== ConversationType.PTP && data.type !== ConversationType.PTG)
     || !Array.isArray(data.userIds)
@@ -156,6 +178,7 @@ const getRecentConversations = async (req, res) => {
 
 module.exports = {
   checkConversationId,
+  getCoversationPTP,
   createConversation,
   clientCreateConversation,
   getConversationIdsOfUser,
