@@ -12,21 +12,21 @@ const transporter = nodemailer.createTransport({
 
 function verificationEmailOptions(_to, _token) {
   return {
-    from: `MyOnShopp <${process.env.SERVICE_EMAIL_ADDRESS}>`,
+    from: `ChattingG7 <${process.env.SERVICE_EMAIL_ADDRESS}>`,
     to: _to,
     subject: `Đây là thư xác minh tài khoản email của bạn.`,
     text: `Đây là thư xác minh tài khoản email của bạn.`,
-    html: `<p>Nhấn vào <a href="http://${process.env.WEB_DOMAIN}/auth/create-account/${_token}">đường dẫn</a> này để xác nhận. Email này có hiệu lực trong 10 phút.</p>`
+    html: `<p>Nhấn vào <a href="${process.env.WEB_DOMAIN}/auth/create-account/${_token}">đường dẫn</a> này để xác nhận. Email này có hiệu lực trong 10 phút.</p>`
   }
 }
 
 function resetPasswordEmailOptions(_to, _token) {
   return {
-    from: `MyOnShopp <${process.env.SERVICE_EMAIL_ADDRESS}>`,
+    from: `ChattingG7 <${process.env.SERVICE_EMAIL_ADDRESS}>`,
     to: _to,
     subject: `Đây là thư đổi mật khẩu tài khoản của bạn.`,
     text: `Đây là thư đổi mật khẩu tài khoản của bạn.`,
-    html: `<p>Nhấn vào <a href="http://${process.env.WEB_DOMAIN}/auth/reset-password/${_token}">đường dẫn</a> này để thực hiện đổi mật khẩu. Email này có hiệu lực trong 10 phút.</p>`
+    html: `<p>Nhấn vào <a href="${process.env.WEB_DOMAIN}/auth/reset-password/${_token}">đường dẫn</a> này để thực hiện đổi mật khẩu. Email này có hiệu lực trong 10 phút.</p>`
   }
 }
 
