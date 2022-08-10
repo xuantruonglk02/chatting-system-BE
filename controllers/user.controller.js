@@ -194,8 +194,10 @@ const searchUserByKeyword = async (req, res) => {
   }
 
   try {
+    const userId = getUserId(req);
     const users = await User
       .find({
+        _id: { $ne: userId },
         $or: [
           { name: new RegExp(req.query.keyword, 'i') },
           { email: req.query.keyword }
