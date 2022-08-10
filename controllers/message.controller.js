@@ -41,9 +41,11 @@ const clientSendMessage = async (req, res) => {
   try {
     const userId = userController.getUserId(req);
     const isConversationId = await conversationController.checkConversationId(req.body.to);
+    console.log(isConversationId);
     const conversation = isConversationId
       ? { _id: req.body.to }
-      : conversationController.getCoversationPTP([userId, req.body.to]);
+      : await conversationController.getCoversationPTP([userId, req.body.to]);
+    console.log(conversation);
     const conversationId = conversation
       ? conversation._id
       : await conversationController.createConversation({
@@ -51,6 +53,7 @@ const clientSendMessage = async (req, res) => {
         type: ConversationType.PTP,
         title: ''
       });
+    console.log(conversation);
 
     const attachments = !req.files
       ? null
@@ -68,6 +71,7 @@ const clientSendMessage = async (req, res) => {
       content: req.body.content,
       attachments: attachments
     }).save();
+    console.log(message);
 
     sendMessage(conversationId.toString(), message);
 
