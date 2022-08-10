@@ -22,19 +22,34 @@ const checkConversationId = async (id) => {
   }
 }
 
-const getCoversationPTP = async (req, res) => {
+const getCoversationPTP = async (userIds) => {
+  if (userIds.length !== 2) {
+    return null;
+  }
+
+  try {
+    const conversation = await Conversation.findOne({
+      type: ConversationType.PTP,
+      userIds: {
+        $all: userIds
+      }
+    });
+
+    return conversation;
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+const clientGetCoversationPTP = async (req, res) => {
   if (!req.query.targetUserId) {
     return res.status(BAD_REQUEST).json({ success: 0 });
   }
 
   try {
     const userId = userController.getUserId(req);
-    const conversation = await Conversation.findOne({
-      type: ConversationType.PTP,
-      userIds: {
-        $all: [userId, req.query.targetUserId]
-      }
-    });
+    const conversation = await getCoversationPTP([userId, req.query.targetUserId]);
 
     return res.json({ success: 1, conversation: conversation });
 
@@ -187,6 +202,7 @@ const getRecentConversations = async (req, res) => {
 module.exports = {
   checkConversationId,
   getCoversationPTP,
+  clientGetCoversationPTP,
   createConversation,
   clientCreateConversation,
   getConversationIdsOfUser,

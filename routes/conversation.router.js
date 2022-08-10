@@ -5,7 +5,7 @@ const router = require('express').Router();
 
 router.use(authMiddleware.verifyToken);
 
-router.get('/ptp', conversationController.getCoversationPTP);
+router.get('/ptp', conversationController.clientGetCoversationPTP);
 router.get('/get-recent', conversationController.getRecentConversations)
 
 router.post('/create', conversationController.clientCreateConversation);

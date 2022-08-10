@@ -41,8 +41,11 @@ const clientSendMessage = async (req, res) => {
   try {
     const userId = userController.getUserId(req);
     const isConversationId = await conversationController.checkConversationId(req.body.to);
-    const conversationId = isConversationId
-      ? req.body.to
+    const conversation = isConversationId
+      ? { _id: req.body.to }
+      : conversationController.getCoversationPTP([userId, req.body.to]);
+    const conversationId = conversation
+      ? conversation._id
       : await conversationController.createConversation({
         userIds: [userId, req.body.to],
         type: ConversationType.PTP,

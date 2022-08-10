@@ -4,8 +4,8 @@ const sockets = [];
 
 const initializeSocket = (socket) => {
   socket.on('user:connect', (data) => {
-    addNewSocket(socket);
     if (data.userId) {
+      addNewSocket(data.userId, socket);
       userController.userOnline(data.userId, socket.id);
       userController.getConversationIdsOfUser(data.userId, (roomIds) => {
         applyRoomsToSocket(socket.id, roomIds);
@@ -18,8 +18,9 @@ const initializeSocket = (socket) => {
   });
 }
 
-const addNewSocket = (socket) => {
+const addNewSocket = (userId, socket) => {
   sockets.push({
+    userId: userId,
     id: socket.id,
     socket: socket
   });

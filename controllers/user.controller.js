@@ -42,20 +42,6 @@ const userOnline = async (userId, socketId) => {
   }
 }
 
-const getConversationIdsOfUser = (userId, callback) => {
-  if (!isValidObjectId(userId)) {
-    return;
-  }
-
-  Conversation.find({ userIds: userId }, (error, conversations) => {
-    if (error) {
-      return console.log(error);
-    }
-    const conversationIds = conversations.map(conversation => conversation._id.toString()) || [];
-    callback(conversationIds);
-  });
-}
-
 const userOffline = async (socketId) => {
   try {
     const user = await User.findOne({ socketId: socketId });
@@ -81,6 +67,20 @@ const getSocketIds = async (userIds) => {
   } catch (error) {
     throw error;
   }
+}
+
+const getConversationIdsOfUser = (userId, callback) => {
+  if (!isValidObjectId(userId)) {
+    return;
+  }
+
+  Conversation.find({ userIds: userId }, (error, conversations) => {
+    if (error) {
+      return console.log(error);
+    }
+    const conversationIds = conversations.map(conversation => conversation._id.toString()) || [];
+    callback(conversationIds);
+  });
 }
 
 const getUserOnlineStatuses = async (req, res) => {
@@ -260,9 +260,9 @@ module.exports = {
   getUserId,
   getUserProfile,
   userOnline,
-  getConversationIdsOfUser,
   userOffline,
   getSocketIds,
+  getConversationIdsOfUser,
   getUserOnlineStatuses,
   changeUserName,
   changeUserPassword,
